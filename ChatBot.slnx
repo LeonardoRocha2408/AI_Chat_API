@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Itens de Solução/">
+    <File Path=".gitignore" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="../DTOs/DTOs.csproj" />
+  <Project Path="ChatBot.csproj" />
+</Solution>
