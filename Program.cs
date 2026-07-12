@@ -1,15 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using DTOs;
 using ChatBot.Methods;
 using ChatBot.Entities;
-using ChatBot.Enums;
-using Microsoft.IdentityModel.Tokens.Experimental;
 using System.Text;
 using ChatBot.Endpoints;
-
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,13 +36,32 @@ builder.Services.AddDbContext<DbEntity>(options => options.UseMySql(
 
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserServices>();
+builder.Services.AddScoped<GeminiService>();
 
 // Add services to the container.
+builder.Services.AddHttpClient();
 
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Description = "JWT Authorization header using the Bearer scheme."
+    });
+
+    options.AddSecurityRequirement(document =>
+        new OpenApiSecurityRequirement
+        {
+            [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+        });
+});
 
 var app = builder.Build();
 

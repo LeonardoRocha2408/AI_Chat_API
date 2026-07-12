@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ChatBot.Entities;
-using ChatBot.Enums;
+using EnumShared.Enums;
 using DTOs;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace ChatBot.Methods
 {
@@ -52,6 +53,27 @@ namespace ChatBot.Methods
             }
 
             return (LoginResult.LoginAccountSuccessfully, User);
+        }
+
+        public async Task<UserValidationResult> ValidateSession(ClaimsPrincipal principal)
+        {
+
+            string? userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+
+            if (userId == null)
+            {
+                return UserValidationResult.UserIdNotFound;
+            }
+
+            UserEntity? user = await _context.Users.FindAsync(Guid.Parse(userId));
+
+            if (user == null)
+            {
+                return UserValidationResult.UserDeleted;
+            }
+
+            return UserValidationResult.SessionValidatedSuccessfully;
         }
 
         public async Task<ChangePasswordResult> ChangePassword(ChangePasswordRequest dto)

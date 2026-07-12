@@ -1,7 +1,10 @@
 ﻿using DTOs;
 using ChatBot.Methods;
-using ChatBot.Enums;
+using EnumShared.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ChatBot.Entities;
+using System.Security.Claims;
 
 namespace ChatBot.Endpoints
 {
@@ -42,6 +45,24 @@ namespace ChatBot.Endpoints
                 }
             });
 
+            app.MapGet("/me", async (ClaimsPrincipal principal, UserServices user) =>
+            {
+
+                UserValidationResult result = await user.ValidateSession(principal);
+
+                return result switch
+                {
+                    UserValidationResult.UserIdNotFound => Results.NotFound("User Id not found"),
+
+                    UserValidationResult.UserDeleted => Results.Unauthorized(),
+
+                    UserValidationResult.SessionValidatedSuccessfully => Results.Accepted(),
+
+                    _ => Results.BadRequest("Unknown error")
+                };
+            })
+                .RequireAuthorization();
+
             app.MapPatch("/user/change_password", async ([FromBody] ChangePasswordRequest request, UserServices user) =>
             {
                 ChangePasswordResult result = await user.ChangePassword(request);
@@ -58,7 +79,7 @@ namespace ChatBot.Endpoints
                 };
             });
 
-            app.MapDelete("/user/change_password", async ([FromBody] DeleteAccountRequest request, UserServices user) =>
+            app.MapDelete("/user/delete_account", async ([FromBody] DeleteAccountRequest request, UserServices user) =>
             {
                 DeleteAccountResult result = await user.DeleteAccount(request);
 

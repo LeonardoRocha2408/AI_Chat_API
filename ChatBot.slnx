@@ -4,5 +4,6 @@
     <File Path="README.md" />
   </Folder>
   <Project Path="../DTOs/DTOs.csproj" />
+  <Project Path="../EnumShared/EnumShared.csproj" Id="6d153a81-8344-40f5-b175-3650cce49dc2" />
   <Project Path="ChatBot.csproj" />
 </Solution>

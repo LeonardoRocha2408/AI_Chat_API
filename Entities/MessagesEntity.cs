@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
-using ChatBot.Enums;
+using EnumShared.Enums;
 
 namespace ChatBot.Entities
 {

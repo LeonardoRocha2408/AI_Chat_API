@@ -8,7 +8,7 @@ namespace ChatBot.Entities
     {
         [Key]
         [Column("Id")]
-        public Guid Id { get; init; }
+        public Guid Id { get; init; } = Guid.NewGuid();
         [Column("Title")]
         public string Title { get; init; } = string.Empty;
         [Column("UserName")]
