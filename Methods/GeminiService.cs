@@ -1,11 +1,11 @@
-﻿using EnumShared.Enums;
+﻿using ChatBot.Entities;
 using DTOs;
 using DTOs.GeminiDTOs;
-using static DTOs.GeminiDTOs.GeminiRequest;
-using System.Text.Json;
-using System.Text;
-using ChatBot.Entities;
+using EnumShared.Enums;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
+using System.Text.Json;
+using static DTOs.GeminiDTOs.GeminiRequest;
 namespace ChatBot.Methods
 {
     public class GeminiService
@@ -29,7 +29,6 @@ namespace ChatBot.Methods
 
         public async Task<ChatResponse> SendMessage(ChatRequest dto, Guid userId)
         {
-            var apiKey = _apikey;
             var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key={_apikey}";
 
             var request = new GeminiRequest()
@@ -38,7 +37,7 @@ namespace ChatBot.Methods
                 {
                     parts =
                     [
-                        new Part 
+                        new Part
                         {
                             text = """
                             You are a assistent. 
@@ -52,15 +51,38 @@ namespace ChatBot.Methods
                             Rules:
                             - Return only JSON
                             - Don't use markdown
-
                             """
                         }
                     ]
                 },
-                contents =
-                [
+            };
+
+            var messages = await _context.Messages
+                .Where(m => m.ConversationId == dto.ConversationId)
+                .OrderByDescending(m => m.CreatedAt)
+                .Take(5)
+                .OrderBy(m => m.CreatedAt)
+                .ToListAsync();
+
+            foreach (var message in messages)
+            {
+                request.contents.Add(new Content
+                {
+                    role = message.Role == Role.User ? "user" :"model",
+                    parts =
+                    [
+                        new Part
+                        {
+                            text = message.Content
+                        }
+                    ]
+                });
+            }
+
+            var currentMessage =
                     new Content
                     {
+                        role = "user",
                         parts =
                         [
                             new Part
@@ -68,9 +90,9 @@ namespace ChatBot.Methods
                                 text = dto.Content
                             }
                         ]
-                    }
-                ]
-            };
+                    };
+
+            request.contents.Add(currentMessage);
 
             string json = JsonSerializer.Serialize(request);
             
@@ -82,7 +104,6 @@ namespace ChatBot.Methods
             var responseApi = await _httpClient.PostAsync(url, content);
             var contentBody = await responseApi.Content.ReadAsStringAsync();
 
-            Console.WriteLine(contentBody);
 
             if (!responseApi.IsSuccessStatusCode)
             {
@@ -114,46 +135,59 @@ namespace ChatBot.Methods
                 throw new Exception("Failed to deserialize chat response");
             }
 
-            string? UserName = await _context.Users.Where(u => u.Id == userId).Select(u => u.UserName).SingleOrDefaultAsync();
+            string? UserName = await _context.Users
+                .Where(u => u.Id == userId).Select(u => u.UserName).SingleOrDefaultAsync();
 
             if (UserName is null)
             {
                     throw new Exception("Failed to search user on database");
             }
 
-            var Conversations = new ConversationEntity()
-            {
-                Id = Guid.NewGuid(),
-                Title = chatResponse.title,
-                UserName = UserName,
-                CreatedAt = DateTime.UtcNow
-            };
+            ConversationEntity conversation;
 
+            if(dto.ConversationId == Guid.Empty)
+            {
+                conversation = new ConversationEntity()
+                {
+                    Id = Guid.NewGuid(),
+                    Title = chatResponse.title,
+                    UserName = UserName,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await _context.Conversations.AddAsync(conversation);
+            }
+            else
+            {
+                conversation = await _context.Conversations
+                    .SingleAsync(c => c.Id == dto.ConversationId);
+
+            }
 
             var userMessages = new MessagesEntity()
             {
                 Id = Guid.NewGuid(),
-                ConversationId = Conversations.Id,
+                ConversationId = conversation.Id,
                 Role = Role.User,
                 Content = dto.Content,
                 CreatedAt = DateTime.UtcNow
             };
+            await _context.Messages.AddAsync(userMessages);
+
 
             var assistantMessages = new MessagesEntity()
             {
                 Id = Guid.NewGuid(),
-                ConversationId = Conversations.Id,
+                ConversationId = conversation.Id,
                 Role = Role.Assistant,
                 Content = chatResponse.content,
                 CreatedAt = DateTime.UtcNow
             };
-
-            await _context.Conversations.AddAsync(Conversations);
-            await _context.Messages.AddAsync(userMessages);
             await _context.Messages.AddAsync(assistantMessages);
+
             await _context.SaveChangesAsync();
 
-            chatResponse.ConversationId = Conversations.Id;
+            chatResponse.ConversationId = conversation.Id;
             chatResponse.UserMessageId = userMessages.Id;
             chatResponse.AssistantMessageId = assistantMessages.Id;
             return chatResponse;

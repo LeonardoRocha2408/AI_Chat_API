@@ -8,6 +8,7 @@ Project for learning Chatbot API development with C#. Its objective is to demons
 - Delete account
 - Password hashing
 - JWT authentication
+- Chat integration with Gemini API
 
 ## Technologies 
 - C# 
