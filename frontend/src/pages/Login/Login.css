@@ -1,0 +1,71 @@
+#root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+
+    border-radius: 40px;
+    box-shadow: 0 0 20px black;
+    padding: 15px;
+    padding-top: 100px;
+}
+#formImg {
+    position: absolute;
+    top: -75px;
+    background-color: white;
+    border-radius: 50%;
+    width: 150px;
+}
+
+
+input {
+    flex: 1;
+
+    color: black;
+    background: transparent;
+
+    border: none;
+    outline: none;
+}
+.organizeInput {
+    display: inline-flex;
+    align-items: center;
+
+    width: 70%;
+
+    background: white;
+
+    margin: 10px;
+}
+.imgInput {
+    display: flex;
+    justify-content: center;
+    background-color: darkgray;
+    height: 25px;
+    padding: 2px;
+    margin-right: 5px;
+}
+
+button {
+    width: 30%;
+
+    transition: transform 0.5s ease;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
+
+link {
+    align-self: flex-end;
+
+    margin: 10px;
+}
