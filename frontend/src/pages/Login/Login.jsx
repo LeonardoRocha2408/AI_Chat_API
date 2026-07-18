@@ -21,6 +21,7 @@ function Login() {
                 })
             })
             if (response.ok) {
+                localStorage.setItem("token", data.token);
                 window.location.href = "/chat"
                 return response.json();
             }
@@ -31,38 +32,40 @@ function Login() {
     }
   return (
       <>
-          <form id="form" onSubmit={SendDatalogin}>
-            {/*<h1>Login</h1>*/}
-              <img id="formImg" src="../../.././Images/login.png"/>
-            <div className="organizeInput">
-                  <label htmlFor="inputUsername">
-                      <img className="imgInput" src="../../.././Images/iconUser.png"/>
-                  </label>
-                  <input
-                      id="inputUsername"
-                      placeholder="Username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value) }></input>
-            </div>
+        <div className="login-page">
+            <form id="form" onSubmit={SendDatalogin}>
+                {/*<h1>Login</h1>*/}
+                <img id="formImg" src="../../.././Images/login.png"/>
+                <div className="organizeInput">
+                    <label htmlFor="inputUsername">
+                        <img className="imgInput" src="../../.././Images/iconUser.png"/>
+                    </label>
+                    <input
+                        type="text"
+                        id="inputUsername"
+                        placeholder="Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value) }></input>
+                </div>
 
-              <div className="organizeInput">
-                  <label htmlFor="inputPassword" >
-                      <img className="imgInput" src="../../.././Images/iconPassword.png"/>
-                  </label>
-                  <input
-                      id="inputPassword"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) =>  setPassword(e.target.value)}></input>
-              </div>
-              <button type="submit">Entrar</button>
+                <div className="organizeInput">
+                    <label htmlFor="inputPassword" >
+                        <img className="imgInput" src="../../.././Images/iconPassword.png"/>
+                    </label>
+                    <input
+                        type="password"
+                        id="inputPassword"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) =>  setPassword(e.target.value)}></input>
+                  </div>
 
-              <nav>
-                  <Link to="">Forgot your password?</Link>
-                  <br></br>
-                  <Link to="/register">Don't have an account yet? Sign up</Link>
-              </nav>
-          </form>
+                <button type="submit">Entrar</button>
+
+                <span><Link to="">Forgot your password?</Link></span>
+                <span><Link to="/register">Don't have an account yet? Sign up</Link></span>
+            </form>
+        </div>      
       </>
   );
 }

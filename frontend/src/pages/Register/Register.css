@@ -1,6 +1,7 @@
 * {
     border: none;
 }
+
 .login-page {
     min-height: 100vh;
     width: 100%;
@@ -9,6 +10,7 @@
     align-items: center;
     background: radial-gradient( circle at top, #4338ca 0%, #1e1b4b 45%, #09090b 100% );
 }
+
 #root {
     display: flex;
     justify-content: center;
@@ -28,6 +30,7 @@ form {
     padding: 15px;
     padding-top: 100px;
 }
+
 #formImg {
     position: absolute;
     top: -75px;
@@ -39,25 +42,21 @@ form {
 
 input {
     flex: 1;
-
     color: black;
     background: white;
-
     border: none;
     outline: none;
-
     font-size: 90%;
 }
+
 .organizeInput {
     display: inline-flex;
     align-items: center;
-
     width: 70%;
-
     background: white;
-
     margin: 10px;
 }
+
 .imgInput {
     display: flex;
     justify-content: center;
@@ -65,6 +64,11 @@ input {
     height: 25px;
     padding: 2px;
     margin-right: 5px;
+}
+
+.error {
+    color: red;
+    align-self:center;
 }
 
 button {
@@ -76,15 +80,16 @@ button {
 }
 
 button:hover {
-        background-color: #0056b3;
-        transform: scale(1.1);
+    background-color: #0056b3;
+    transform: scale(1.1);
 }
 
 span {
     align-self: flex-end;
-    color:#a78bfa;
+    color: #a78bfa;
     margin: 10px;
 }
+
 a:hover {
     color: #9ca3af;
 }
