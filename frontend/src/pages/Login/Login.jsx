@@ -2,9 +2,11 @@ import "./Login.css"
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
+
 function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [passwordError, setPasswordError] = useState("");
 
     async function SendDatalogin(e) {
         e.preventDefault();
@@ -21,10 +23,14 @@ function Login() {
                 })
             })
             if (response.ok) {
-                localStorage.setItem("token", data.token);
                 window.location.href = "/chat"
-                return response.json();
             }
+            else if (response.status >= 400 && response.status < 500) {
+                setPasswordError("Incorrect data");
+                return;
+            }
+            const data = await response.json();
+            localStorage.setItem("token", data.token);
         }
         catch (error) {
             alert(error);
@@ -59,7 +65,7 @@ function Login() {
                         value={password}
                         onChange={(e) =>  setPassword(e.target.value)}></input>
                   </div>
-
+                  {passwordError && (<span className="error">{passwordError}</span>)}
                 <button type="submit">Entrar</button>
 
                 <span><Link to="">Forgot your password?</Link></span>
