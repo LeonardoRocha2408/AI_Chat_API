@@ -3,6 +3,8 @@ import { Routes, Route } from "react-router-dom";
 
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
+import ChangePassword from "./pages/ChangePassword/ChangePassword";
+import DeleteAccount from "./pages/DeleteAccount/DeleteAccount"
 import Chat from "./pages/Chat/Chat";
 import './App.css'
 
@@ -14,6 +16,8 @@ function App() {
             <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/change_password" element={<ChangePassword />} />
+                <Route path="/delete_account" element={<DeleteAccount/> } />
                 <Route path="/chat" element={<Chat /> } />
             </Routes>
             

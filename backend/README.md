@@ -1,5 +1,5 @@
-# AI Chat API
-Project for learning Chatbot API development with C#. Its objective is to demonstrate my knowledge of software development.
+# AI Chat Application
+A project full-stack built with C#, JavaScript, CSS and HTML. Its objective is to demonstrate my full-stack development skills.
 
 ## Features
 - Account registration
@@ -8,12 +8,17 @@ Project for learning Chatbot API development with C#. Its objective is to demons
 - Delete account
 - Password hashing
 - JWT authentication
-- Chat integration with Gemini API
+- Gemini API integration
+- React frontend
 
 ## Technologies 
 - C# 
+- JavaScript
+- CSS
+- HTML
 - ASP.NET Core Minimal API
 - Entity Framework Core
+- React
 - MySQL
 - JWT authentication
 - Swagger
@@ -21,6 +26,8 @@ Project for learning Chatbot API development with C#. Its objective is to demons
 
 ## Getting started
 - Clone the repository
-- Configure your appsettings.json
-- Run the database migrations
-- Start the application
+- Configure your "appsettings.json"
+- Update the database connection string
+- Run the Entity Framework migrations
+- Run the backend 
+- Run the frontend

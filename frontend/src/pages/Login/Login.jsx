@@ -40,7 +40,6 @@ function Login() {
       <>
         <div className="login-page">
             <form id="form" onSubmit={SendDatalogin}>
-                {/*<h1>Login</h1>*/}
                 <img id="formImg" src="../../.././Images/login.png"/>
                 <div className="organizeInput">
                     <label htmlFor="inputUsername">
@@ -66,9 +65,9 @@ function Login() {
                         onChange={(e) =>  setPassword(e.target.value)}></input>
                   </div>
                   {passwordError && (<span className="error">{passwordError}</span>)}
-                <button type="submit">Entrar</button>
+                <button type="submit">Enter</button>
 
-                <span><Link to="">Forgot your password?</Link></span>
+                <span><Link to="/change_password">Forgot your password?</Link></span>
                 <span><Link to="/register">Don't have an account yet? Sign up</Link></span>
             </form>
         </div>      

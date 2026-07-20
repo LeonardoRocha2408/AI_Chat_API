@@ -1,29 +1,27 @@
-import "./Register.css"
+import "./ChangePassword.css"
 import { Link } from "react-router-dom";
 import { useState } from "react";
-
-
-function validatePassword(password, confirmPassword) {
-    if (password.length < 8) {
-        return "Password has must at least 8 characters";
+function validatePassword(password, newPassword) {
+    if (newPassword.length < 8) {
+        return "The password must have at least 8 characters";
     }
-    if (password !== confirmPassword) {
-        return "Password's are different"
+    if (password === newPassword) {
+        return "Passwords must be different"
     }
-    if (password.length >= 8 && password === confirmPassword) {
+    if (newPassword.length >= 8 && password !== newPassword) {
         return "";
     }
 }
 
 
-function Register() {
+function ChangePassword() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
 
     function handlerRegister() {
-        const result = validatePassword(password, confirmPassword);
+        const result = validatePassword(password, newPassword);
 
         setPasswordError(result);
         return result;
@@ -36,18 +34,19 @@ function Register() {
             return;
         }
         try {
-            const response = await fetch("https://localhost:7076/user/account_login", {
-                method: "POST",
+            const response = await fetch("https://localhost:7076/user/change_password", {
+                method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     Username: username,
-                    Password: password
+                    Password: password,
+                    NewPassword: newPassword
                 })
             })
             if (response.ok) {
-                window.location.href = "/chat"
+                window.location.href = "/login"
                 return response.json();
             }
         }
@@ -84,27 +83,26 @@ function Register() {
                             onChange={(e) => setPassword(e.target.value)}></input>
                     </div>
                     <div className="organizeInput">
-                        <label htmlFor="inputConfirmPassword" >
+                        <label htmlFor="inputNewPassword" >
                             <img className="imgInput" src="../../.././Images/iconPassword.png" />
                         </label>
                         <input
                             type="password"
-                            id="inputConfirmPassword"
-                            placeholder="Confirm password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}></input>
+                            id="inputNewPassword"
+                            placeholder="New password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}></input>
                     </div>
 
                     {passwordError && (<span className="error">{passwordError}</span>)}
 
-                    <button type="submit" onClick={handlerRegister}>Create</button>
+                    <button type="submit" onClick={handlerRegister}>Reset password</button>
 
-                    <span><Link to="/change_password">Forgot your password?</Link></span>
-                    <span><Link to="/login">Do you already have account? Sign in</Link></span>
+                    <span><Link to="/register">Don't have a account yet? Sign up</Link></span>
                 </form>
             </div>
         </>
     );
 }
 
-export default Register;
+export default ChangePassword;
